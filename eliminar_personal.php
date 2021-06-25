@@ -66,11 +66,11 @@
 			se recupera el rut ingresado para ser eliminado, se verifica si es igual al rut del Admin, 
 			y se muestra alerta con mensaje-->	
 			<?php			
-				if (isset($_POST['eliminar'])) {
-					$eliminar = $_POST['eliminar-personal'];
-					if ($eliminar == '180332403') {
-						echo "<script lenguaje='javascript'>alert('Admin general no puede ser eliminado');</script>";
-					} else {
+				if (isset($_POST['eliminar'])) { //se valida que la variable está definida
+					$eliminar = $_POST['eliminar-personal']; //Se obtiene el rut enviado
+					if ($eliminar == '180332403') { //Se valida si es el rut del admin, en caso sea, se envía un mensaje
+						echo "<script lenguaje='javascript'>alert('Admin general no puede ser eliminado');</script>"; //mensaje indicando que no se puede eliminar al admin
+					} else { //si el rut no es del admin se procede a eliminar al personal de la tabla personal de la bd
 						$consulta = "DELETE FROM personal WHERE rut = '$eliminar'";
 						$ejecutar = mysqli_query($conexion, $consulta);
 						header("Location:eliminar_personal.php");

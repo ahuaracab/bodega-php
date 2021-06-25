@@ -93,41 +93,47 @@
             <?php           
                 
                 if (isset($_POST['agregar'])) {
-                    //Las siguientes dos líneas de código recuperan las variables de stock.
+                    //se recupera valor de rut enviado por el formulario
 					$rut = $_POST['rut'];
-						
+					//se consulta por la existencia del personal con el rut enviado en la base de datos	
 					$consulta = "SELECT * FROM personal WHERE rut='$rut'";
 					$ejecutar = mysqli_query($conexion, $consulta);
 					$resul = mysqli_num_rows($ejecutar);
 
-                    if($resul > 0) {
-
+                    if($resul > 0) { //valida que se encontró al personal en la base de datos
+                        //se recupera valor de código del producto enviado por el formulario
                         $codigo = $_POST['codigo'];
-						
+						//se consulta por la existencia del producto con el código enviado, en la base de datos	
                         $consulta = "SELECT * FROM productos WHERE cod_producto='$codigo'";
                         $ejecutar = mysqli_query($conexion, $consulta);
                         $resul = mysqli_num_rows($ejecutar);
     
-                        if($resul > 0) {
-
+                        if($resul > 0) { //valida que se encontró el producto en la base de datos
+                            //Se recupera el stock del producto que se va a actualizar
                             $result = mysqli_fetch_assoc($ejecutar);
                             $stock = $result['stock'];
 
-                            if( $stock > 0) {
-
+                            if( $stock > 0) { //Se valida que el producto tenga stock disponible
+                                //se recuperan la cantidad del producto que se va a retirar 
                                 $cantidad = $_POST['cantidad'];
-                                $fecha = $_POST['fecha'];
 
-                                $consulta = "INSERT INTO entregas (rut, cod_producto, cantidad, fecha_entrega) VALUES ('$rut', '$codigo', '$cantidad', '$fecha')";
-                                $ejecutar = mysqli_query($conexion, $consulta) or die ("No se pudo crear el registro");
-                                    
-                                $stock = $stock - $cantidad;
-
-                                $consulta = "UPDATE productos SET stock = '$stock' WHERE cod_producto = '$codigo'";
-					            $ejecutar = mysqli_query($conexion, $consulta);
-							
-						        echo "Entrega añadida correctamente ";
-                                header("Location:realizar_entrega.php");
+                                if ($cantidad <= $stock){ //se valida que se retire una cantidad menor o igual al stock
+                                    //se recuperan la fecha en la que se va a retirar el producto
+                                    $fecha = $_POST['fecha'];
+                                    //Se realiza el registro de la entrega en la base de datos en la tabla entregas
+                                    $consulta = "INSERT INTO entregas (rut, cod_producto, cantidad, fecha_entrega) VALUES ('$rut', '$codigo', '$cantidad', '$fecha')";
+                                    $ejecutar = mysqli_query($conexion, $consulta) or die ("No se pudo crear el registro");
+                                        
+                                    $stock = $stock - $cantidad; //Se descuenta la cantidad retirada al stock
+                                    //Se actualiza el nuevo stock del producto en la base de datos en la tabla productos
+                                    $consulta = "UPDATE productos SET stock = '$stock' WHERE cod_producto = '$codigo'";
+                                    $ejecutar = mysqli_query($conexion, $consulta);
+                                
+                                    echo "Entrega añadida correctamente ";
+                                    header("Location:realizar_entrega.php"); // se redirecciona a la misma vista realizar_entrega
+                                } else {
+                                    echo "Solo se puede retirar como máximo la totalidad del stock disponible";
+                                }
                                                      
                             } else {
                                 echo "El producto no tiene stock";

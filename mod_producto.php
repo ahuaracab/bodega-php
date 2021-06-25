@@ -104,23 +104,24 @@
 					// La siguiente línea de codigo verifica que la varible del boton submit "actualiza" este creada.	
 					if (isset($_POST['actualiza'])) {
 						
-						//Las siguientes dos líneas de código recuperan las variables de stock.
+						//Se recupera el valor del código de producto enviado por el formulario
 						$seleccionar = $_POST['seleccionar'];
-												
+						//Se consulta a la tabla productos de la base de datos para confirmar su existencia en ella
 						$consulta = "SELECT * FROM productos WHERE cod_producto='$seleccionar'";
 						$ejecutar = mysqli_query($conexion, $consulta);
 						$resul = mysqli_num_rows($ejecutar);
 
-						if($resul > 0){
+						if($resul > 0){ //Se valida si existe o no el producto con el código que se ingresó
 							$result = mysqli_fetch_assoc($ejecutar);
-							$stock = $_POST['stock'];
-							$stock = $stock + $result['stock'];
+							$stock = $_POST['stock']; //Se recupera el stock que se va a aumentar o disminuir
+							$stock = $stock + $result['stock']; //Se agrega o quita el stock enviado al stock que se recuperó de la base de datos 
 							
-							if($stock >= 0){
+							if($stock >= 0){ //se valida que no se intente quitar más stock del que tiene un producto
+								//Se realiza la actualizción de stock en la base de datos
 								$consulta = "UPDATE productos SET stock = '$stock' WHERE cod_producto = '$seleccionar'";
 								$ejecutar = mysqli_query($conexion, $consulta);
 								
-								header("Location:mod_producto.php");
+								header("Location:mod_producto.php"); //Se redirecciona a la misma vista mod_producto
 							} else {
 								echo "Hay menos stock del que intentas quitar";
 							}
@@ -166,24 +167,24 @@
 				 Redirigir el flujo a esta misma página para visualizar los cambios-->
 				<?php 
 					if (isset($_POST['modificar'])) {
-						//Las siguientes dos líneas de código recuperan las variables de stock.
+						//Se recupera el valor del código de producto enviado por el formulario
 						$seleccionar = $_POST['seleccionar'];
-						
+						//Se consulta a la tabla productos de la base de datos para confirmar su existencia en ella
 						$consulta = "SELECT * FROM productos WHERE cod_producto='$seleccionar'";
 						$ejecutar = mysqli_query($conexion, $consulta);
 						$resul = mysqli_num_rows($ejecutar);
 
-						if($resul > 0){
+						if($resul > 0){ //Se valida si existe o no el producto con el código que se ingresó
+							//se recuperar los valores de descripcion, proveedor y fecha enviados por el formulario
 							$descripcion = $_POST['descripcion'];
 							$proveedor = $_POST['proveedor'];
 							$fecha = $_POST['fecha'];
-
+							//se realiza la actualización de los valores en la base de datos
 							$consulta = "UPDATE productos SET descripcion = '$descripcion', proveedor = '$proveedor', fecha_ingreso = '$fecha' WHERE cod_producto = '$seleccionar'";
 							$ejecutar = mysqli_query($conexion, $consulta);
 
-
 							// header("Location:mod_producto.php");
-							//Se agregó la siguiente llamada a mod_producto.php porque el header anterior no funciona
+							//Se agregó la siguiente llamada a mod_producto.php porque la función header anterior no actualizaba la tabla que muestran datos de los productos
 							echo"<script language='javascript'>window.location='mod_producto.php'</script>;";
 
 						} else {
