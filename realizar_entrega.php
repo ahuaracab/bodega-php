@@ -84,25 +84,62 @@
             </form>          
 
             <!--Completar el Código que se requerirá a continuación--> 
-                 <!--Se verifica que la variable del boton submit este creada y se requiere:
-                 Recuperar las variables con los datos ingresados. 
-                 Descontar la cantidad ingresada al stock existente del producto a retirar.
-                 Insertar los datos ingresados en la tabla "entregas" de la base de datos. 
-                 Redirigir el flujo a esta misma página para visualizar la actualización del stock.-->    
+            <!--Se verifica que la variable del boton submit este creada y se requiere:
+            Recuperar las variables con los datos ingresados. 
+            Descontar la cantidad ingresada al stock existente del producto a retirar.
+            Insertar los datos ingresados en la tabla "entregas" de la base de datos. 
+            Redirigir el flujo a esta misma página para visualizar la actualización del stock.-->    
 
-            <?php 
-                
+            <?php           
                 
                 if (isset($_POST['agregar'])) {
-                
+                    //Las siguientes dos líneas de código recuperan las variables de stock.
+					$rut = $_POST['rut'];
+						
+					$consulta = "SELECT * FROM personal WHERE rut='$rut'";
+					$ejecutar = mysqli_query($conexion, $consulta);
+					$resul = mysqli_num_rows($ejecutar);
 
+                    if($resul > 0) {
 
+                        $codigo = $_POST['codigo'];
+						
+                        $consulta = "SELECT * FROM productos WHERE cod_producto='$codigo'";
+                        $ejecutar = mysqli_query($conexion, $consulta);
+                        $resul = mysqli_num_rows($ejecutar);
+    
+                        if($resul > 0) {
 
+                            $result = mysqli_fetch_assoc($ejecutar);
+                            $stock = $result['stock'];
 
+                            if( $stock > 0) {
 
+                                $cantidad = $_POST['cantidad'];
+                                $fecha = $_POST['fecha'];
+
+                                $consulta = "INSERT INTO entregas (rut, cod_producto, cantidad, fecha_entrega) VALUES ('$rut', '$codigo', '$cantidad', '$fecha')";
+                                $ejecutar = mysqli_query($conexion, $consulta) or die ("No se pudo crear el registro");
+                                    
+                                $stock = $stock - $cantidad;
+
+                                $consulta = "UPDATE productos SET stock = '$stock' WHERE cod_producto = '$codigo'";
+					            $ejecutar = mysqli_query($conexion, $consulta);
+							
+						        echo "Entrega añadida correctamente ";
+                                header("Location:realizar_entrega.php");
+                                                     
+                            } else {
+                                echo "El producto no tiene stock";
+                            }
+                        } else {
+                            echo "No existe un producto con el código ingresado";
+                        } 
+                    } else {
+						echo "No existe un personal con el rut ingresado";
+					}
                 }
-             ?>
-                
+            ?>                
         </div>
     </body>
 </html> 

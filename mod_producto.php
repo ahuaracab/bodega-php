@@ -116,10 +116,15 @@
 							$stock = $_POST['stock'];
 							$stock = $stock + $result['stock'];
 							
-							$consulta = "UPDATE productos SET stock = '$stock' WHERE cod_producto = '$seleccionar'";
-							$ejecutar = mysqli_query($conexion, $consulta);
-							
-							header("Location:mod_producto.php");
+							if($stock >= 0){
+								$consulta = "UPDATE productos SET stock = '$stock' WHERE cod_producto = '$seleccionar'";
+								$ejecutar = mysqli_query($conexion, $consulta);
+								
+								header("Location:mod_producto.php");
+							} else {
+								echo "Hay menos stock del que intentas quitar";
+							}
+
 						} else {
 							echo "No existe un producto con el código ingresado";
 						}
@@ -176,7 +181,11 @@
 							$consulta = "UPDATE productos SET descripcion = '$descripcion', proveedor = '$proveedor', fecha_ingreso = '$fecha' WHERE cod_producto = '$seleccionar'";
 							$ejecutar = mysqli_query($conexion, $consulta);
 
-							header("Location:mod_producto.php");
+
+							// header("Location:mod_producto.php");
+							//Se agregó la siguiente llamada a mod_producto.php porque el header anterior no funciona
+							echo"<script language='javascript'>window.location='mod_producto.php'</script>;";
+
 						} else {
 							echo "No existe un producto con el código ingresado";
 						}

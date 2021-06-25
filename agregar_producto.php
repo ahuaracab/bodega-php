@@ -81,18 +81,21 @@
                     if (isset($_POST['crear'])) {
 
                          $codigo = $_POST['codigo'];
-                         $descripcion = $_POST['descripcion'];
                          $stock = $_POST['stock'];
-                         $proveedor = $_POST['proveedor'];
-                         $fecha = ($_POST['fecha']);
-
+                         
                          $consulta = "SELECT * FROM productos WHERE cod_producto = '$codigo'";
-                         $ejecutar = mysqlI_query($conexion, $consulta);
+                         $ejecutar = mysqli_query($conexion, $consulta);
                          $result = mysqli_num_rows($ejecutar);
 
                          if( $result > 0) {
-                            echo "ya existe un producto con el mismo codigo ";                         
+                            echo "Ya existe un producto con el mismo cÓdigo";                         
+                         } else if ( $stock < 0){
+                            echo "No se puede ingresar un stock negativo";
                          } else {
+
+                            $descripcion = $_POST['descripcion'];                            
+                            $proveedor = $_POST['proveedor'];
+                            $fecha = ($_POST['fecha']);
 
                             $consulta = "INSERT INTO productos (cod_producto, descripcion, stock, proveedor, fecha_ingreso) VALUES ('$codigo', '$descripcion', '$stock', '$proveedor', '$fecha')";
                             $ejecutar = mysqli_query($conexion, $consulta) or die ("No se pudo crear el registro");
@@ -101,11 +104,7 @@
                          }
                                        
                     }
-
-
                  ?>
-
-
                 </form>
 
             </div>

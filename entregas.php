@@ -1,5 +1,5 @@
 <?php
-include ('sesion.php');
+	include ('sesion.php');
 ?>
 
 
@@ -35,7 +35,7 @@ include ('sesion.php');
 				include('conexion.php');
 
 				$consulta = "SELECT * FROM entregas";
-				$ejecutar = mysql_query($consulta,$conexion);
+				$ejecutar = mysqli_query($conexion, $consulta);
 		
 				echo "<table  width='80%' align='center'><tr>";	         	  
 				echo "<th width='20%'>RUT</th>";
@@ -44,7 +44,7 @@ include ('sesion.php');
 				echo "<th width='20%'>FECHA DE ENTREGA</th>";
 				echo  "</tr>"; 
 		
-				while($result = mysql_fetch_array($ejecutar)){	
+				while($result = mysqli_fetch_assoc($ejecutar)){	
 	          	
 		          echo "<tr>";	         	  
 				  echo '<td width=20%>'.$result['rut'].'</td>';
