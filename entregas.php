@@ -1,7 +1,6 @@
 <?php
-	include ('sesion.php');
+	include 'sesion.php';
 ?>
-
 
 <!DOCTYPE html> 
 <html>
@@ -9,21 +8,21 @@
 		<meta charset="UTF-8"/>
 		<title>Entregas</title>
 		<link type="text/css" href="estilo.css" rel="stylesheet">
-
 	</head>
-
 	<body>
 		<div class="contenedor">
 			<div class= "encabezado">
 	        	<div class="izq">
 	        		<p>Bienvenido/a:<br></p>
-	        		<?php echo $_SESSION['nombre'].' '.$_SESSION['apellido']; ?>
-	        	</div>
 
+	        		<?php
+						echo $_SESSION['nombre'].' '.$_SESSION['apellido'];
+					?>
+					
+	        	</div>
 	            <div class="centro">
 	            	<a href=principalBodega.php><img src='imagenes/home.png'><br>Home</a>
-	            </div>
-	            
+	            </div>	            
 	            <div class="derecha">
 	                <a href="salir.php?sal=si"><img src="imagenes/cerrar.png"><br>Salir</a>
 	            </div>
@@ -31,11 +30,13 @@
 
 			<h1 align='center'>ENTREGAS REALIZADAS</h1>
 			<br><br>
+
 			<?php
-				include('conexion.php');
+
+				include 'conexion.php';
 
 				$consulta = "SELECT * FROM entregas";
-				$ejecutar = mysqli_query($conexion, $consulta);
+				$ejecutar = $mysqli->query($consulta) or die("Datos no encontrados");
 		
 				echo "<table  width='80%' align='center'><tr>";	         	  
 				echo "<th width='20%'>RUT</th>";
@@ -44,17 +45,19 @@
 				echo "<th width='20%'>FECHA DE ENTREGA</th>";
 				echo  "</tr>"; 
 		
-				while($result = mysqli_fetch_assoc($ejecutar)){	
-	          	
-		          echo "<tr>";	         	  
-				  echo '<td width=20%>'.$result['rut'].'</td>';
-				  echo '<td width=20%>'.$result['cod_producto'].'</td>';
-				  echo '<td width=20%>'. $result['cantidad'].'</td>';
-				  echo '<td width=20%>'.$result['fecha_entrega'].'</td>';
-				  echo "</tr>";
+				while($result = mysqli_fetch_assoc($ejecutar)) {	          	
+					echo "<tr>";	         	  
+					echo '<td width=20%>'.$result['rut'].'</td>';
+					echo '<td width=20%>'.$result['cod_producto'].'</td>';
+					echo '<td width=20%>'. $result['cantidad'].'</td>';
+					echo '<td width=20%>'.$result['fecha_entrega'].'</td>';
+					echo "</tr>";
 				}
+
 			 	echo "</table></br>";
+
 			?>
 
+		</div>
 	</body>
 </html>

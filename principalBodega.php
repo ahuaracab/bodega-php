@@ -1,7 +1,6 @@
 <?php
-include ('sesion.php');
+    include 'sesion.php';
 ?>
-
 
 <!DOCTYPE html>
 <html>
@@ -10,23 +9,23 @@ include ('sesion.php');
         <title>Bodega</title>
         <link rel="stylesheet" href="estilo.css"/>
     </head>
-    <body>
-        
+    <body>        
         <div class="contenedor">
             <h1 align="center">CUENTA DE BODEGA</h1>
             <div class= "encabezado">
-                <div class="izq">
-            
+                <div class="izq">            
                     <p>Bienvenido/a:<br></p>
-                      <?php echo $_SESSION['nombre'].' '.$_SESSION['apellido']; ?>
-                </div>
-                
+
+                    <?php
+                        echo $_SESSION['nombre'].' '.$_SESSION['apellido'];
+                    ?>
+
+                </div>                
                 <div class="derecha">
                     <a href="salir.php?sal=si"><img src="imagenes/cerrar.png"><br>Salir</a>
                 </div>
                 <br><h2 align="center">CONTROL DE PRODUCTOS</h2><br>
-            </div>
-                
+            </div>                
             <div>
                 <table align="center" class="tabla">
                     <tr height="150">
@@ -43,7 +42,6 @@ include ('sesion.php');
                     <br><br><br>Entregas realizadas<td></center>
                     </tr>
                 </table>
-
             </div>
         </div>
         

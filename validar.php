@@ -1,17 +1,18 @@
 <?php
-	include ('conexion.php');
+
+	include 'conexion.php';
 
 	$usuario = $_POST['usuario'];
 	$pass = md5($_POST['pass']);
 
 	$consulta = "SELECT * FROM personal WHERE rut = '$usuario' AND contraseña = '$pass'";
-	$ejecutar = mysqli_query($conexion, $consulta);
-
-	$resul = mysqli_num_rows($ejecutar);
-	if ($resul > 0){
+	$ejecutar = $mysqli->query($consulta) or die("Datos no encontrados");
+	$resul = $ejecutar->num_rows;
+	
+	if ($resul > 0) {
 
 		session_start();
-		$result = mysqli_fetch_assoc($ejecutar);
+		$result = $ejecutar->fetch_assoc();
 		$_SESSION['activo'] = true;
 		$_SESSION['usuario'] = $usuario;
 		$_SESSION['cargo'] = $result['cargo'];
@@ -28,5 +29,3 @@
 	}
 
 ?>
-
-

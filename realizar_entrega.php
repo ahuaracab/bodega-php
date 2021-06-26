@@ -1,5 +1,5 @@
 <?php
-    include ('sesion.php');
+    include 'sesion.php';
 ?>
 
 <!DOCTYPE html> 
@@ -9,30 +9,33 @@
         <title>Entregas</title>
         <link type="text/css" href="estilo.css" rel="stylesheet">
     </head>
-
     <body>
         <div class="contenedor">
             <div class= "encabezado">
                 <div class="izq">
                     <p>Bienvenido/a:<br></p>
-                    <?php echo $_SESSION['nombre'].' '.$_SESSION['apellido']; ?>
-                </div>
 
+                    <?php
+                        echo $_SESSION['nombre'].' '.$_SESSION['apellido'];
+                    ?>
+
+                </div>
                 <div class="centro">
                     <a href=principalBodega.php><img src='imagenes/home.png'><br>Home</a>
-                </div>
-                
+                </div>                
                 <div class="derecha">
                     <a href="salir.php?sal=si"><img src="imagenes/cerrar.png"><br>Salir</a>
                 </div>
-            </div>                
+            </div>
             
             <br><h1 align='center'>PRODUCTOS EXISTENTES</h1><br>
+
             <?php
-                include('conexion.php');
+
+                include 'conexion.php';
 
                 $consulta = "SELECT * FROM productos";
-                $ejecutar = mysqli_query($conexion, $consulta);
+                $ejecutar = $mysqli->query($consulta) or die("Datos no encontrados");
         
                 echo "<table  width='80%' align='center'><tr>";               
                 echo "<th width='10%'>CODIGO PRODUCTO</th>";
@@ -42,45 +45,40 @@
                 echo "<th width='20%'>FECHA DE INGRESO</th>";
                 echo  "</tr>"; 
             
-                while($result = mysqli_fetch_assoc($ejecutar)){    
-                    
-                  echo "<tr>";                
-                  echo '<td width=10%>'.$result['cod_producto'].'</td>';
-                  echo '<td width=20%>'.$result['descripcion'].'</td>';
-                  echo '<td width=20%>'. $result['stock'].'</td>';
-                  echo '<td width=20%>'.$result['proveedor'].'</td>';
-                  echo '<td width=20%>'.$result['fecha_ingreso'].'</td>';
-                  echo "</tr>";
+                while($result = $ejecutar->fetch_assoc()){                    
+                    echo "<tr>";                
+                    echo '<td width=10%>'.$result['cod_producto'].'</td>';
+                    echo '<td width=20%>'.$result['descripcion'].'</td>';
+                    echo '<td width=20%>'. $result['stock'].'</td>';
+                    echo '<td width=20%>'.$result['proveedor'].'</td>';
+                    echo '<td width=20%>'.$result['fecha_ingreso'].'</td>';
+                    echo "</tr>";
                 }
-                 echo "</table></br>";
+
+                echo "</table></br>";
+
             ?>
 
             <form action="" method="post" align='center'>
-
                 <div class="campo">
                     <label name="rut">Rut personal que retira:</label>
                     <input name='rut' type="text">
                 </div>
-
                 <div class="campo">
                     <label name="cod">Código del producto:</label>
                     <input name='codigo' type="text">
                 </div>
-
                 <div class="campo">
                     <label name="cantd">Cantidad:</label>
                     <input name='cantidad' type="text">
                 </div>
-
                 <div class="campo">
                     <label name="cantd">Fecha entrega:</label>
                     <input name='fecha' type="date">
-                </div>
-                
+                </div>                
                 <div class="botones">
                     <input name='agregar' type="submit" value="Agregar">
-                </div>
-                
+                </div>                
             </form>          
 
             <!--Completar el Código que se requerirá a continuación--> 
@@ -89,7 +87,6 @@
             Descontar la cantidad ingresada al stock existente del producto a retirar.
             Insertar los datos ingresados en la tabla "entregas" de la base de datos. 
             Redirigir el flujo a esta misma página para visualizar la actualización del stock.-->    
-
             <?php           
                 
                 if (isset($_POST['agregar'])) {
@@ -97,20 +94,20 @@
 					$rut = $_POST['rut'];
 					//se consulta por la existencia del personal con el rut enviado en la base de datos	
 					$consulta = "SELECT * FROM personal WHERE rut='$rut'";
-					$ejecutar = mysqli_query($conexion, $consulta);
-					$resul = mysqli_num_rows($ejecutar);
+                    $ejecutar = $mysqli->query($consulta) or die("Personal no encontrado");
+                    $resul = $ejecutar->num_rows;
 
-                    if($resul > 0) { //valida que se encontró al personal en la base de datos
+                    if ($resul > 0) { //valida que se encontró al personal en la base de datos
                         //se recupera valor de código del producto enviado por el formulario
                         $codigo = $_POST['codigo'];
 						//se consulta por la existencia del producto con el código enviado, en la base de datos	
                         $consulta = "SELECT * FROM productos WHERE cod_producto='$codigo'";
-                        $ejecutar = mysqli_query($conexion, $consulta);
-                        $resul = mysqli_num_rows($ejecutar);
+                        $ejecutar = $mysqli->query($consulta) or die("Producto no encontrado");
+                        $resul = $ejecutar->num_rows;
     
                         if($resul > 0) { //valida que se encontró el producto en la base de datos
                             //Se recupera el stock del producto que se va a actualizar
-                            $result = mysqli_fetch_assoc($ejecutar);
+                            $result = $ejecutar->fetch_assoc();
                             $stock = $result['stock'];
 
                             if( $stock > 0) { //Se valida que el producto tenga stock disponible
@@ -122,12 +119,12 @@
                                     $fecha = $_POST['fecha'];
                                     //Se realiza el registro de la entrega en la base de datos en la tabla entregas
                                     $consulta = "INSERT INTO entregas (rut, cod_producto, cantidad, fecha_entrega) VALUES ('$rut', '$codigo', '$cantidad', '$fecha')";
-                                    $ejecutar = mysqli_query($conexion, $consulta) or die ("No se pudo crear el registro");
+                                    $ejecutar = $mysqli->query($consulta) or die("No se pudo registrar la entrega");
                                         
                                     $stock = $stock - $cantidad; //Se descuenta la cantidad retirada al stock
                                     //Se actualiza el nuevo stock del producto en la base de datos en la tabla productos
                                     $consulta = "UPDATE productos SET stock = '$stock' WHERE cod_producto = '$codigo'";
-                                    $ejecutar = mysqli_query($conexion, $consulta);
+                                    $ejecutar = $mysqli->query($consulta) or die("No se pudo actualizar el producto");
                                 
                                     echo "Entrega añadida correctamente ";
                                     header("Location:realizar_entrega.php"); // se redirecciona a la misma vista realizar_entrega
@@ -148,4 +145,4 @@
             ?>                
         </div>
     </body>
-</html> 
+</html>

@@ -3,6 +3,8 @@ codificación de caracteres,
 seleccion de base de datos. -->
 
 <?php 
-    $conexion = mysqli_connect("localhost", "root", "", "gestion_bodega") or  die("Error al conectar a Base de Datos");
-    mysqli_set_charset($conexion, 'utf8');
+
+    $mysqli = new mysqli('localhost', 'root', '', 'gestion_bodega');
+    $mysqli->set_charset("utf8");
+
 ?>

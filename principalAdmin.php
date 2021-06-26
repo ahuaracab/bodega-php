@@ -1,5 +1,5 @@
 <?php
-    include ('sesion.php');
+    include 'sesion.php';
 ?>
 
 <!DOCTYPE html>
@@ -9,26 +9,22 @@
         <title>Admin</title>
         <link rel="stylesheet" href="estilo.css"/>
     </head>
-
-    <body>
-        
+    <body>        
         <div class="contenedor">
             <h1 align="center">CUENTA DE ADMINISTRADOR</h1>
             <div class= "encabezado">
-            <div class="izq">
-        
-                <p>Bienvenido/a:<br></p>
-               <?php echo $_SESSION['nombre'].' '.$_SESSION['apellido']; ?>
-              
-               
-            </div>
-            
-            <div class="derecha">
-                <a href="salir.php?sal=si"><img src="imagenes/cerrar.png"><br>Salir</a>
-            </div>
+                <div class="izq">        
+                    <p>Bienvenido/a:<br></p>
 
-            <br><h1 align="center">CONTROL DE PRODUCTO</h1><br>
-
+                    <?php
+                        echo $_SESSION['nombre'].' '.$_SESSION['apellido'];
+                    ?>         
+                
+                </div>                
+                <div class="derecha">
+                    <a href="salir.php?sal=si"><img src="imagenes/cerrar.png"><br>Salir</a>
+                </div>
+                <br><h1 align="center">CONTROL DE PRODUCTOS</h1><br>
             </div>
             <div>
                 <table align="center" class="tabla">
@@ -42,7 +38,6 @@
                     <br><br><br>Eliminar producto<td></center>
                     </tr>
                 </table>
-
             </div>
 
             <div class="encabezado">
@@ -61,7 +56,6 @@
                     <br><br><br>Eliminar personal<td></center>
                     </tr>
                 </table>
-
             </div>
         </div>
     </body>
