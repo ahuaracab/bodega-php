@@ -36,6 +36,9 @@
                     <br><br><br>Modificar poducto<td></center>
                     <td width="200"><center><a class="modulos" href="eliminar_producto.php"><img src="imagenes/elp.png"></a>
                     <br><br><br>Eliminar producto<td></center>
+                    <td width="200"><center><a class="modulos" href="agregar_producto_carro.php"><img src="imagenes/adp.png"></a>
+                    <br><br><br>Agregar a la web
+                    <td></center>
                     </tr>
                 </table>
             </div>
@@ -54,6 +57,7 @@
                     <br><br><br>Modificar personal<td></center>
                     <td width="200"><center><a class="modulos" href="eliminar_personal.php"><img src="imagenes/el.png"></a>
                     <br><br><br>Eliminar personal<td></center>
+
                     </tr>
                 </table>
             </div>
